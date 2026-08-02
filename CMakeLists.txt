@@ -18,6 +18,9 @@ FetchContent_MakeAvailable(raylib)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-file(GLOB_RECURSE SOURCES src/*.cpp)
-add_executable(${PROJECT_NAME} ${SOURCES})
+file(GLOB_RECURSE SOURCES src/*.cpp )
+
+add_executable(${PROJECT_NAME} ${SOURCES} external/tinyxml2/tinyxml2.cpp)
+target_include_directories(${PROJECT_NAME} PRIVATE external)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
