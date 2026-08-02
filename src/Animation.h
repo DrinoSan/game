@@ -1,4 +1,4 @@
-#pramga once
+#pragma once
 #include "raylib.h"
 
 enum class AnimId { WalkFront, WalkBack, WalkLeft, WalkRight, /* Idle, Attack later */ Count };
