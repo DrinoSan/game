@@ -44,6 +44,11 @@ void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale )
                            ( float ) tileset.tileSize },
                          { destX, destY, destSize, destSize }, { 0, 0 }, 0,
                          WHITE );
+
+         if ( tileset.tileDefs[ index ].walkable == false )
+         {
+            DrawRectangleLines( ( int ) destX, ( int ) ( destY ), 16, 16, RED );
+         }
       }
    }
 }
@@ -66,11 +71,21 @@ Tileset_t loadTileset( const std::string& tsxPath )
       return Tileset_t{};
    }
 
+   Tileset_t             tileSet;
    int                   tileSize  = tileset->IntAttribute( "tilewidth" );
    int                   spacing   = tileset->IntAttribute( "spacing" );
    int                   columns   = tileset->IntAttribute( "columns" );
    int                   tileCount = tileset->IntAttribute( "tilecount" );
    tinyxml2::XMLElement* image     = tileset->FirstChildElement( "image" );
+
+//   Tileset_t tileSet{ LoadTexture( "../assets/map/tilemap.png" ), tileSize,
+//                      spacing, columns, std::vector<TileDef_t>( tileCount ) };
+
+   tileSet.columns  = columns;
+   tileSet.tileSize = tileSize;
+   tileSet.spacing  = spacing;
+   tileSet.tileDefs = std::vector<TileDef_t>( tileCount );
+   tileSet.texture = LoadTexture( "../assets/map/tilemap.png" );
 
    if ( !image )
    {
@@ -84,11 +99,8 @@ Tileset_t loadTileset( const std::string& tsxPath )
                  image->FirstAttribute()->Value(), tileSize, spacing, columns,
                  src );
 
-   Tileset_t tileSet{ LoadTexture( "../assets/map/tilemap.png" ), tileSize,
-                      spacing, columns, std::vector<TileDef_t>( tileCount ) };
-
    for ( auto* tile = tileset->FirstChildElement( "tile" ); tile != nullptr;
-         tile       = tileset->NextSiblingElement( "tileset" ) )
+         tile       = tile->NextSiblingElement( "tile" ) )
    {
       if ( tile->FirstChildElement( "objectgroup" ) != nullptr )
       {
