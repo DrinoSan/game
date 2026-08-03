@@ -1,9 +1,11 @@
 #include "TileMap.h"
 #include "raylib.h"
 #include "tinyxml2.h"
+
 #include <cctype>
 #include <print>
 #include <sstream>
+#include <vector>
 
 void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale )
 {
@@ -64,10 +66,11 @@ Tileset_t loadTileset( const std::string& tsxPath )
       return Tileset_t{};
    }
 
-   int                   tileSize = tileset->IntAttribute( "tilewidth" );
-   int                   spacing  = tileset->IntAttribute( "spacing" );
-   int                   columns  = tileset->IntAttribute( "columns" );
-   tinyxml2::XMLElement* image    = tileset->FirstChildElement( "image" );
+   int                   tileSize  = tileset->IntAttribute( "tilewidth" );
+   int                   spacing   = tileset->IntAttribute( "spacing" );
+   int                   columns   = tileset->IntAttribute( "columns" );
+   int                   tileCount = tileset->IntAttribute( "tilecount" );
+   tinyxml2::XMLElement* image     = tileset->FirstChildElement( "image" );
 
    if ( !image )
    {
@@ -81,8 +84,20 @@ Tileset_t loadTileset( const std::string& tsxPath )
                  image->FirstAttribute()->Value(), tileSize, spacing, columns,
                  src );
 
-   return Tileset_t{ LoadTexture( "../assets/map/tilemap.png" ), tileSize,
-                     spacing, columns };
+   Tileset_t tileSet{ LoadTexture( "../assets/map/tilemap.png" ), tileSize,
+                      spacing, columns, std::vector<TileDef_t>( tileCount ) };
+
+   for ( auto* tile = tileset->FirstChildElement( "tile" ); tile != nullptr;
+         tile       = tileset->NextSiblingElement( "tileset" ) )
+   {
+      if ( tile->FirstChildElement( "objectgroup" ) != nullptr )
+      {
+         int id                          = tile->IntAttribute( "id" );
+         tileSet.tileDefs[ id ].walkable = false;
+      }
+   }
+
+   return tileSet;
 }
 
 TileMap_t parseMap( const std::string& path )
@@ -110,7 +125,7 @@ TileMap_t parseMap( const std::string& path )
 
    std::string data = layer->FirstChildElement( "data" )->GetText();
 
-   std::println( "firstgid {} data {}", firstgid, data );
+   // std::println( "firstgid {} data {}", firstgid, data );
 
    std::stringstream ss( data );
    std::string       token;
