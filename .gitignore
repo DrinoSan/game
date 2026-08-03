@@ -3,3 +3,4 @@ build
 .cache
 .clang-format
 compile_commands.json
+assets/map/tests/test.tsx
