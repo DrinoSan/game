@@ -1,7 +1,25 @@
 #pragma once
+#include <string>
+
 #include "raylib.h"
 
-#include <string>
+
+enum class Facing_t
+{
+   UP,
+   RIGHT,
+   DOWN,
+   LEFT
+};
+
+enum class Activity_t
+{
+   Idle,
+   Walk,
+   Attack,
+   Hurt,
+   Die
+};
 
 enum class AnimId
 {
@@ -9,7 +27,8 @@ enum class AnimId
    WalkBack,
    WalkLeft,
    WalkRight,
-   /* Idle, Attack later */ Count
+   Count,
+   /* Idle, Attack later */
 };
 
 struct Animation_t
