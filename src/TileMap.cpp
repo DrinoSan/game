@@ -1,13 +1,15 @@
 #include "TileMap.h"
+#include "TextureStore.h"
 #include "raylib.h"
-#include "tinyxml2.h"
+#include "tinyxml2/tinyxml2.h"
 
 #include <cctype>
 #include <print>
 #include <sstream>
 #include <vector>
 
-void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale )
+void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale,
+              const TextureStore_t& store )
 {
    for ( int y = 0; y < map.height; ++y )
    {
@@ -39,7 +41,7 @@ void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale )
 
          float destSize = tileset.tileSize * scale;
 
-         DrawTexturePro( tileset.texture,
+         DrawTexturePro( store.textures[ tileset.textureIndex ],
                          { sourceX, sourceY, ( float ) tileset.tileSize,
                            ( float ) tileset.tileSize },
                          { destX, destY, destSize, destSize }, { 0, 0 }, 0,
@@ -53,7 +55,7 @@ void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale )
    }
 }
 
-Tileset_t loadTileset( const std::string& tsxPath )
+Tileset_t loadTileset( const std::string& tsxPath, TextureStore_t& store )
 {
    tinyxml2::XMLDocument doc;
    auto                  err = doc.LoadFile( tsxPath.c_str() );
@@ -78,14 +80,17 @@ Tileset_t loadTileset( const std::string& tsxPath )
    int                   tileCount = tileset->IntAttribute( "tilecount" );
    tinyxml2::XMLElement* image     = tileset->FirstChildElement( "image" );
 
-//   Tileset_t tileSet{ LoadTexture( "../assets/map/tilemap.png" ), tileSize,
-//                      spacing, columns, std::vector<TileDef_t>( tileCount ) };
+   tileSet.columns      = columns;
+   tileSet.tileSize     = tileSize;
+   tileSet.spacing      = spacing;
+   tileSet.tileDefs     = std::vector<TileDef_t>( tileCount );
+   tileSet.textureIndex = getTextureIndex( store, "../assets/map/tilemap.png" );
 
-   tileSet.columns  = columns;
-   tileSet.tileSize = tileSize;
-   tileSet.spacing  = spacing;
-   tileSet.tileDefs = std::vector<TileDef_t>( tileCount );
-   tileSet.texture = LoadTexture( "../assets/map/tilemap.png" );
+   if ( tileSet.textureIndex == -1 )
+   {
+      std::println( "Failed loading Texture" );
+      return Tileset_t{};
+   }
 
    if ( !image )
    {

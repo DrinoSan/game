@@ -1,6 +1,8 @@
 #pragma once
-#include "raylib.h"
 #include <vector>
+
+#include "raylib.h"
+#include "TextureStore.h"
 
 struct TileDef_t
 {
@@ -22,15 +24,16 @@ struct TileMap_t
 // Describes where the tile is in the png when index is provided
 struct Tileset_t
 {
-   Texture2D              texture;
+   TextureIndex           textureIndex;
    int                    tileSize;
    int                    spacing;
    int                    columns;
    std::vector<TileDef_t> tileDefs;
 };
 
-void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale );
+void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale,
+              const TextureStore_t& store );
 
-Tileset_t loadTileset( const std::string& tsxPath );
+Tileset_t loadTileset( const std::string& tsxPath, TextureStore_t& store );
 
 TileMap_t parseMap( const std::string& path );
