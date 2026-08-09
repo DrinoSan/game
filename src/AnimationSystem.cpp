@@ -2,6 +2,7 @@
 
 #include "Animation.h"
 #include "AnimationSystem.h"
+#include "TextureStore.h"
 #include "raylib.h"
 
 AnimId selectAnimation( Activity_t activity, Facing_t facing )
@@ -53,7 +54,8 @@ void advanceAnimation(
 void drawEntity(
     const Vector2& position, const Activity_t& activity, const Facing_t& facing,
     int                                                      currentFrame,
-    const std::array<Animation_t, ( size_t ) AnimId::Count>& animations )
+    const std::array<Animation_t, ( size_t ) AnimId::Count>& animations,
+    const TextureStore_t&                                    store )
 {
    AnimId      animID          = selectAnimation( activity, facing );
    const auto& playerAnimation = animations[ ( size_t ) animID ];
@@ -76,7 +78,7 @@ void drawEntity(
        ( int ) ( position.y - playerAnimation.frameHeight / 2.0f ),
        playerAnimation.frameWidth, playerAnimation.frameHeight, GREEN );
 
-   DrawTexturePro( playerAnimation.texture, source,
+   DrawTexturePro( store.textures[ playerAnimation.textureIndex ], source,
                    { position.x - playerAnimation.frameWidth / 2.0f,
                      position.y - playerAnimation.frameHeight / 2.0f,
                      ( float ) playerAnimation.frameWidth,
