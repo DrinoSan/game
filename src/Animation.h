@@ -1,8 +1,6 @@
 #pragma once
-#include <string>
 
 #include "TextureStore.h"
-#include "raylib.h"
 
 enum class Facing_t
 {
@@ -27,8 +25,9 @@ enum class AnimId
    WalkBack,
    WalkLeft,
    WalkRight,
+   Idle,
    Count,
-   /* Idle, Attack later */
+   /* Attack later */
 };
 
 struct Animation_t

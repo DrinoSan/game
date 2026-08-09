@@ -1,10 +1,7 @@
 #pragma once
 #include "raylib.h"
-#include <array>
 
 #include "Animation.h"
-#include "AnimationSystem.h"
-#include "TileMap.h"
 
 struct Player_t
 {
@@ -20,8 +17,7 @@ struct Player_t
    float frameTimer;
 };
 
+namespace input
+{
 void handleInput( Player_t& player );
-
-void drawPlayer(
-    const Player_t&                                          player,
-    const std::array<Animation_t, ( size_t ) AnimId::Count>& animations );
+};

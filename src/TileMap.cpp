@@ -59,9 +59,8 @@ void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale,
 }
 };   // namespace render
 
-namespace update
+namespace assets
 {
-
 std::expected<Tileset_t, TilesetError_t>
 loadTileset( const std::string& tsxPath, TextureStore_t& store )
 {
@@ -171,4 +170,4 @@ std::expected<TileMap_t, TileMapError_t> parseMap( const std::string& path )
    return tileMap;
 }
 
-};   // namespace update
+};   // namespace assets

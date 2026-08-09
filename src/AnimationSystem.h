@@ -2,16 +2,18 @@
 
 #include "Animation.h"
 #include "TextureStore.h"
+#include <utility>
 
-namespace update
+namespace anim
 {
 AnimId selectAnimation( Activity_t activity, Facing_t facing );
 
 void advanceAnimation(
     Activity_t activity, Facing_t facing, float& frametimer, int& currentframe,
-    float                                                    dt,
-    const std::array<Animation_t, ( size_t ) AnimId::Count>& animations );
-};   // namespace update
+    float dt,
+    const std::array<Animation_t, std::to_underlying( AnimId::Count )>&
+        animations );
+};   // namespace anim
 
 namespace render
 {

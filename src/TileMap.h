@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "TextureStore.h"
-#include "raylib.h"
 
 struct TileDef_t
 {
@@ -49,10 +48,10 @@ enum class TileMapError_t
    general_error,
 };
 
-namespace update
+namespace assets
 {
 std::expected<Tileset_t, TilesetError_t>
 loadTileset( const std::string& tsxPath, TextureStore_t& store );
 
 std::expected<TileMap_t, TileMapError_t> parseMap( const std::string& path );
-};   // namespace update
+};   // namespace assets

@@ -1,11 +1,12 @@
 #include <array>
+#include <utility>
 
 #include "Animation.h"
 #include "AnimationSystem.h"
 #include "TextureStore.h"
 #include "raylib.h"
 
-namespace update
+namespace anim
 {
 AnimId selectAnimation( Activity_t activity, Facing_t facing )
 {
@@ -30,7 +31,7 @@ AnimId selectAnimation( Activity_t activity, Facing_t facing )
    }
 
    // For now i dont care
-   return AnimId::WalkFront;
+   return AnimId::Idle;
 }
 
 void advanceAnimation(
@@ -39,7 +40,7 @@ void advanceAnimation(
     const std::array<Animation_t, ( size_t ) AnimId::Count>& animations )
 {
    AnimId      animid          = selectAnimation( activity, facing );
-   const auto& playeranimation = animations[ ( size_t ) animid ];
+   const auto& playeranimation = animations[ std::to_underlying( animid ) ];
 
    frametimer += dt;
    if ( frametimer > playeranimation.frameDuration )
@@ -53,7 +54,7 @@ void advanceAnimation(
    }
 }
 
-};   // namespace update
+};   // namespace anim
 
 namespace render
 {
@@ -63,7 +64,7 @@ void drawEntity(
     const std::array<Animation_t, ( size_t ) AnimId::Count>& animations,
     const TextureStore_t&                                    store )
 {
-   AnimId      animID          = update::selectAnimation( activity, facing );
+   AnimId      animID          = anim::selectAnimation( activity, facing );
    const auto& playerAnimation = animations[ ( size_t ) animID ];
    Rectangle   source          = { 0, 0, ( float ) playerAnimation.frameWidth,
                                    ( float ) playerAnimation.frameHeight };
