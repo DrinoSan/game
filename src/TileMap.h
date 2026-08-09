@@ -38,10 +38,21 @@ enum class TilesetError_t
    general_error,
 };
 
+namespace render
+{
 void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale,
               const TextureStore_t& store );
+};
 
+enum class TileMapError_t
+{
+   general_error,
+};
+
+namespace update
+{
 std::expected<Tileset_t, TilesetError_t>
 loadTileset( const std::string& tsxPath, TextureStore_t& store );
 
-TileMap_t parseMap( const std::string& path );
+std::expected<TileMap_t, TileMapError_t> parseMap( const std::string& path );
+};   // namespace update

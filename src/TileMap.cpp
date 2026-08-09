@@ -9,6 +9,8 @@
 #include <sstream>
 #include <vector>
 
+namespace render
+{
 void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale,
               const TextureStore_t& store )
 {
@@ -55,6 +57,10 @@ void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale,
       }
    }
 }
+};   // namespace render
+
+namespace update
+{
 
 std::expected<Tileset_t, TilesetError_t>
 loadTileset( const std::string& tsxPath, TextureStore_t& store )
@@ -119,7 +125,7 @@ loadTileset( const std::string& tsxPath, TextureStore_t& store )
    return tileSet;
 }
 
-TileMap_t parseMap( const std::string& path )
+std::expected<TileMap_t, TileMapError_t> parseMap( const std::string& path )
 {
    tinyxml2::XMLDocument doc;
    auto                  err = doc.LoadFile( path.c_str() );
@@ -127,7 +133,7 @@ TileMap_t parseMap( const std::string& path )
    if ( err )
    {
       std::println( "Error Loading path" );
-      return TileMap_t{};
+      return std::unexpected( TileMapError_t::general_error );
    }
 
    TileMap_t             tileMap;
@@ -164,3 +170,5 @@ TileMap_t parseMap( const std::string& path )
 
    return tileMap;
 }
+
+};   // namespace update

@@ -5,6 +5,8 @@
 #include "TextureStore.h"
 #include "raylib.h"
 
+namespace update
+{
 AnimId selectAnimation( Activity_t activity, Facing_t facing )
 {
    if ( activity == Activity_t::Walk )
@@ -51,13 +53,17 @@ void advanceAnimation(
    }
 }
 
+};   // namespace update
+
+namespace render
+{
 void drawEntity(
     const Vector2& position, const Activity_t& activity, const Facing_t& facing,
     int                                                      currentFrame,
     const std::array<Animation_t, ( size_t ) AnimId::Count>& animations,
     const TextureStore_t&                                    store )
 {
-   AnimId      animID          = selectAnimation( activity, facing );
+   AnimId      animID          = update::selectAnimation( activity, facing );
    const auto& playerAnimation = animations[ ( size_t ) animID ];
    Rectangle   source          = { 0, 0, ( float ) playerAnimation.frameWidth,
                                    ( float ) playerAnimation.frameHeight };
@@ -85,3 +91,5 @@ void drawEntity(
                      ( float ) playerAnimation.frameHeight },
                    { 0, 0 }, 0, WHITE );
 }
+
+};   // namespace render
