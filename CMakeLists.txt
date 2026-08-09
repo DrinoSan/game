@@ -16,6 +16,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raylib)
 
+add_compile_options(-Wall -Wextra -Wpedantic)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 file(GLOB_RECURSE SOURCES src/*.cpp )
