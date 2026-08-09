@@ -4,6 +4,7 @@
 #include "tinyxml2/tinyxml2.h"
 
 #include <cctype>
+#include <expected>
 #include <print>
 #include <sstream>
 #include <vector>
@@ -55,14 +56,15 @@ void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale,
    }
 }
 
-Tileset_t loadTileset( const std::string& tsxPath, TextureStore_t& store )
+std::expected<Tileset_t, TilesetError_t>
+loadTileset( const std::string& tsxPath, TextureStore_t& store )
 {
    tinyxml2::XMLDocument doc;
    auto                  err = doc.LoadFile( tsxPath.c_str() );
    if ( err )
    {
       std::println( "Error Loading path" );
-      return Tileset_t{};
+      return std::unexpected( TilesetError_t::general_error );
    }
 
    tinyxml2::XMLElement* tileset = doc.FirstChildElement( "tileset" );
@@ -70,7 +72,7 @@ Tileset_t loadTileset( const std::string& tsxPath, TextureStore_t& store )
    if ( !tileset )
    {
       std::println( "no <tileset> element" );
-      return Tileset_t{};
+      return std::unexpected( TilesetError_t::general_error );
    }
 
    Tileset_t             tileSet;
@@ -89,13 +91,13 @@ Tileset_t loadTileset( const std::string& tsxPath, TextureStore_t& store )
    if ( tileSet.textureIndex == -1 )
    {
       std::println( "Failed loading Texture" );
-      return Tileset_t{};
+      return std::unexpected( TilesetError_t::general_error );
    }
 
    if ( !image )
    {
       std::println( "no <image> element" );
-      return Tileset_t{};
+      return std::unexpected( TilesetError_t::general_error );
    }
 
    const char* src = image->Attribute( "source" );

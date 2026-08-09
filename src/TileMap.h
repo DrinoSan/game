@@ -1,8 +1,9 @@
 #pragma once
+#include <expected>
 #include <vector>
 
-#include "raylib.h"
 #include "TextureStore.h"
+#include "raylib.h"
 
 struct TileDef_t
 {
@@ -31,9 +32,16 @@ struct Tileset_t
    std::vector<TileDef_t> tileDefs;
 };
 
+// This can be extended to have a precise info about the error
+enum class TilesetError_t
+{
+   general_error,
+};
+
 void drawMap( const TileMap_t& map, const Tileset_t& tileset, int scale,
               const TextureStore_t& store );
 
-Tileset_t loadTileset( const std::string& tsxPath, TextureStore_t& store );
+std::expected<Tileset_t, TilesetError_t>
+loadTileset( const std::string& tsxPath, TextureStore_t& store );
 
 TileMap_t parseMap( const std::string& path );
