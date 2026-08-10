@@ -65,7 +65,7 @@ void drawEntity(
     const TextureStore_t&                                    store )
 {
    AnimId      animID          = anim::selectAnimation( activity, facing );
-   const auto& playerAnimation = animations[ ( size_t ) animID ];
+   const auto& playerAnimation = animations[ std::to_underlying( animID ) ];
    Rectangle   source          = { 0, 0, ( float ) playerAnimation.frameWidth,
                                    ( float ) playerAnimation.frameHeight };
 
@@ -80,15 +80,12 @@ void drawEntity(
    DrawCircle( ( int ) position.x, ( int ) position.y, 3, RED );
    // the dest rectangle's left edge, so we can see the frame box
    float destX = position.x - playerAnimation.frameWidth / 2.0f;
-   DrawRectangleLines(
-       ( int ) destX,
-       ( int ) ( position.y - playerAnimation.frameHeight / 2.0f ),
-       playerAnimation.frameWidth, playerAnimation.frameHeight, GREEN );
+   float destY = position.y - playerAnimation.frameHeight / 2.0f;
+   DrawRectangleLines( ( int ) destX, ( int ) destY, playerAnimation.frameWidth,
+                       playerAnimation.frameHeight, GREEN );
 
    DrawTexturePro( store.textures[ playerAnimation.textureIndex ], source,
-                   { position.x - playerAnimation.frameWidth / 2.0f,
-                     position.y - playerAnimation.frameHeight / 2.0f,
-                     ( float ) playerAnimation.frameWidth,
+                   { destX, destY, ( float ) playerAnimation.frameWidth,
                      ( float ) playerAnimation.frameHeight },
                    { 0, 0 }, 0, WHITE );
 }

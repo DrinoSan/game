@@ -19,12 +19,12 @@ int main()
 
    Player_t player{ .position{ 350, 200 },
                     .velocity{ 0, 0 },
-                    .facing       = Facing_t::DOWN,
-                    .activity     = Activity_t::Idle,
+                    .facing   = Facing_t::DOWN,
+                    .activity = Activity_t::Idle,
+                    .hitboxSize{ 12, 6 },
                     .currentFrame = 0,
                     .frameTimer   = 0 };
 
-   std::println( "Init" );
    InitWindow( 800, 450, "Endless" );
 
    auto tileset =
@@ -59,12 +59,15 @@ int main()
       input::handleInput( player );
 
       float dt = GetFrameTime();
-      movement::moveEntity( player.position, player.velocity, dt );
 
       render::drawMap( map, tileset.value(), 1, textureStore );
-      anim::advanceAnimation( player.activity, player.facing,
-                                player.frameTimer, player.currentFrame, dt,
-                                animations );
+
+
+      movement::step( player.position, player.hitboxSize, player.velocity, map,
+                      tileset.value(), dt );
+
+      anim::advanceAnimation( player.activity, player.facing, player.frameTimer,
+                              player.currentFrame, dt, animations );
 
       render::drawEntity( player.position, player.activity, player.facing,
                           player.currentFrame, animations, textureStore );
