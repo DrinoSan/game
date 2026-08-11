@@ -21,7 +21,7 @@ int main()
                     .velocity{ 0, 0 },
                     .facing   = Facing_t::DOWN,
                     .activity = Activity_t::Idle,
-                    .hitboxSize{ 12, 6 },
+                    .hitboxSize{ 12, 10 },
                     .currentFrame = 0,
                     .frameTimer   = 0 };
 

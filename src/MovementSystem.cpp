@@ -14,8 +14,9 @@ void moveEntity( Vector2& position, const Vector2& velocity, float dt )
    position.y += velocity.y * dt;
 }
 
-void step( Vector2& position, const Vector2& hitboxSize, const Vector2& velocity,
-           const TileMap_t& map, const Tileset_t& set, float dt )
+void step( Vector2& position, const Vector2& hitboxSize,
+           const Vector2& velocity, const TileMap_t& map, const Tileset_t& set,
+           float dt )
 {
    auto oldPosition = position;
    position.x += velocity.x * dt;
@@ -53,17 +54,26 @@ bool collides( Rectangle hitbox, const TileMap_t& map,
    auto tileSize = tileset.tileSize;
    DrawRectangleLinesEx( hitbox, 100.0f, GOLD );
 
-   auto minTileX = std::floor( hitbox.x / tileSize );
-   auto maxTileX = std::floor( ( hitbox.x + hitbox.width - 0.001 ) / tileSize );
+   double minTileX = std::floor( hitbox.x / tileSize );
+   double maxTileX = std::floor( ( hitbox.x + hitbox.width - 0.001 ) / tileSize );
 
-   auto minTileY = std::floor( hitbox.y / tileSize );
-   auto maxTileY =
+   double minTileY = std::floor( hitbox.y / tileSize );
+   double maxTileY =
        std::floor( ( hitbox.y + hitbox.height - 0.001 ) / tileSize );
 
    for ( auto y = minTileY; y <= maxTileY; ++y )
    {
+      if ( y >= map.height || y < 0 )
+      {
+         return true;
+      }
+
       for ( auto x = minTileX; x <= maxTileX; ++x )
       {
+         if ( x >= map.width || x < 0 )
+         {
+            return true;
+         }
          const auto& index = map.tiles[ y * map.width + x ];
          if ( index == -1 )
          {
