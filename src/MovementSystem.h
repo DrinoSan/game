@@ -16,6 +16,6 @@ namespace collision
 Rectangle getHitboxByPositionAndSize( const Vector2& position,
                                       const Vector2& hitboxSize );
 
-bool collides( Rectangle hitbox, const TileMap_t& map,
+bool collides( Rectangle& hitbox, const TileMap_t& map,
                const Tileset_t& tileset );
 };   // namespace collision

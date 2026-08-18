@@ -4,6 +4,7 @@
 
 #include "Animation.h"
 #include "AnimationSystem.h"
+#include "Camera.h"
 #include "MovementSystem.h"
 #include "Player.h"
 #include "StartupConfig.h"
@@ -26,6 +27,12 @@ int main()
                     .frameTimer   = 0 };
 
    InitWindow( 800, 450, "Endless" );
+
+   Camera2D camera = { 0 };
+   camera.target   = { player.position.x + 20.0f, player.position.y + 20.0f };
+   camera.offset   = { 800 / 2.0f, 450 / 2.0f };
+   camera.rotation = 0.0f;
+   camera.zoom     = 1.0f;
 
    auto tileset =
        assets::loadTileset( "../assets/map/sampleSheet.tsx", textureStore );
@@ -54,6 +61,7 @@ int main()
    {
       BeginDrawing();
       ClearBackground( RAYWHITE );
+      BeginMode2D( camera );
       DrawText( "Endless", 350, 200, 20, DARKGRAY );
 
       input::handleInput( player );
@@ -62,9 +70,16 @@ int main()
 
       render::drawMap( map, tileset.value(), 1, textureStore );
 
-
       movement::step( player.position, player.hitboxSize, player.velocity, map,
                       tileset.value(), dt );
+
+      camera::followPosition( camera, player.position );
+      camera.zoom = expf( logf( camera.zoom ) +
+                          ( ( float ) GetMouseWheelMove() * 0.1f ) );
+      if ( camera.zoom > 3.0f )
+         camera.zoom = 3.0f;
+      else if ( camera.zoom < 1.5f )
+         camera.zoom = 1.5f;
 
       anim::advanceAnimation( player.activity, player.facing, player.frameTimer,
                               player.currentFrame, dt, animations );
@@ -72,6 +87,7 @@ int main()
       render::drawEntity( player.position, player.activity, player.facing,
                           player.currentFrame, animations, textureStore );
 
+      EndMode2D();
       EndDrawing();
    }
 

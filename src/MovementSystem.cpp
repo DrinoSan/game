@@ -48,14 +48,14 @@ Rectangle getHitboxByPositionAndSize( const Vector2& position,
             hitboxSize.x, hitboxSize.y };
 }
 
-bool collides( Rectangle hitbox, const TileMap_t& map,
+bool collides( Rectangle& hitbox, const TileMap_t& map,
                const Tileset_t& tileset )
 {
    auto tileSize = tileset.tileSize;
-   DrawRectangleLinesEx( hitbox, 100.0f, GOLD );
 
    double minTileX = std::floor( hitbox.x / tileSize );
-   double maxTileX = std::floor( ( hitbox.x + hitbox.width - 0.001 ) / tileSize );
+   double maxTileX =
+       std::floor( ( hitbox.x + hitbox.width - 0.001 ) / tileSize );
 
    double minTileY = std::floor( hitbox.y / tileSize );
    double maxTileY =
@@ -80,7 +80,8 @@ bool collides( Rectangle hitbox, const TileMap_t& map,
             continue;
          }
 
-         if ( tileset.tileDefs[ index ].walkable == false )
+         if ( ( size_t ) index < tileset.tileDefs.size() &&
+              tileset.tileDefs[ index ].walkable == false )
          {
             return true;
          }
